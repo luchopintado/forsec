@@ -1,12 +1,11 @@
 <?php
 
-class ArticleEntity extends EntityBase implements DBOCrud{
+class InfoEntity extends EntityBase implements DBOCrud{
 
-  var $article_id='';
-  var $article_title='';
-  var $article_description='';
-  var $article_image='';
-  var $article_user='';
+  var $info_id='';
+  var $info_direccion='';
+  var $info_telefono='';
+  var $info_email='';
 
   public function __construct($options = array()) {
     parent::__construct($options);
@@ -14,25 +13,25 @@ class ArticleEntity extends EntityBase implements DBOCrud{
 
   public function storeFormValues(&$options) {
     $pattern = "/[^\.\,\-\_'\"\@\?\!\:\$ a-zA-Z0-9()áéíóúÁÉÍÓÚüÜ]/";
-    if (isset($options["article_id"])) {
-      if ($options["article_id"] == "") {
-        $options["article_id"] = null;
+    if (isset($options["info_id"])) {
+      if ($options["info_id"] == "") {
+        $options["info_id"] = null;
       }
     }
     //Add validation for other fields, specially STRINGS!
     $this->__construct($options);
   }
 
-  public static function getById($article_id) {
+  public static function getById($info_id) {
     try{
       global $pdo;
-      $sql = "SELECT * FROM article WHERE article_id=:article_id LIMIT 1";
+      $sql = "SELECT * FROM info WHERE info_id=:info_id LIMIT 1";
       $stmt = $pdo->prepare($sql);
-      $stmt->bindParam(':article_id', $article_id, PDO::PARAM_INT);
+      $stmt->bindParam(':info_id', $info_id, PDO::PARAM_INT);
       $stmt->execute();
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
       if($row){
-        return new ArticleEntity($row);
+        return new InfoEntity($row);
       }else{
         return false;
       }
@@ -68,7 +67,7 @@ class ArticleEntity extends EntityBase implements DBOCrud{
           $whereClause = ' WHERE ' . $cadWhere;
       }
 
-      $query = 'SELECT SQL_CALC_FOUND_ROWS * FROM article ' . $whereClause . $orderClause .' LIMIT :start, :limit';
+      $query = 'SELECT SQL_CALC_FOUND_ROWS * FROM info ' . $whereClause . $orderClause .' LIMIT :start, :limit';
       $stmt = $pdo->prepare($query);
       if(count($whereParams)>0){
         foreach($whereParams as $wp){
@@ -88,12 +87,12 @@ class ArticleEntity extends EntityBase implements DBOCrud{
       $result = $pdo->query("SELECT FOUND_ROWS() AS totalCount");
       $result->setFetchMode(PDO::FETCH_ASSOC);
       $rowTotal = $result->fetch();
-      $articles = array();
+      $infos = array();
       while($row = $stmt->fetch()){
-        $article = new ArticleEntity($row);
-        $articles[] = $article;
+        $info = new InfoEntity($row);
+        $infos[] = $info;
       }
-      return array("articles"=>$articles, "totalCount"=>$rowTotal["totalCount"]);
+      return array("infos"=>$infos, "totalCount"=>$rowTotal["totalCount"]);
     } catch (Exception $exc) {
       echo $exc->getTraceAsString();
     }
@@ -106,8 +105,8 @@ class ArticleEntity extends EntityBase implements DBOCrud{
   public function delete() {
     try {
       global $pdo;
-      $stmt = $pdo->prepare('DELETE FROM article WHERE article_id=:article_id LIMIT 1');
-      $stmt->bindParam(':article_id', $this->article_id, PDO::PARAM_INT);
+      $stmt = $pdo->prepare('DELETE FROM info WHERE info_id=:info_id LIMIT 1');
+      $stmt->bindParam(':info_id', $this->info_id, PDO::PARAM_INT);
       $stmt->execute();
       if($stmt->rowCount() === 1){
         return true;
@@ -123,23 +122,20 @@ class ArticleEntity extends EntityBase implements DBOCrud{
     try {
       global $pdo;
       $stmt = $pdo->prepare(
-          'INSERT INTO article(
-            article_title , 
-            article_description , 
-            article_image , 
-            article_user
+          'INSERT INTO info(
+            info_direccion , 
+            info_telefono , 
+            info_email
         )
         VALUES(
-            :article_title , 
-            :article_description , 
-            :article_image , 
-            :article_user
+            :info_direccion , 
+            :info_telefono , 
+            :info_email
         )'
       );
-      $stmt->bindParam(':article_title', $this->article_title, PDO::PARAM_STR);
-      $stmt->bindParam(':article_description', $this->article_description, PDO::PARAM_STR);
-      $stmt->bindParam(':article_image', $this->article_image, PDO::PARAM_STR);
-      $stmt->bindParam(':article_user', $this->article_user, PDO::PARAM_INT);
+      $stmt->bindParam(':info_direccion', $this->info_direccion, PDO::PARAM_STR);
+      $stmt->bindParam(':info_telefono', $this->info_telefono, PDO::PARAM_STR);
+      $stmt->bindParam(':info_email', $this->info_email, PDO::PARAM_STR);
       $stmt->execute();
 
       # Affected Rows?
@@ -157,19 +153,17 @@ class ArticleEntity extends EntityBase implements DBOCrud{
     try {
       global $pdo;
       $stmt = $pdo->prepare(
-          'UPDATE article SET
-          article_title=:article_title,
-          article_description=:article_description,
-          article_image=:article_image,
-          article_user=:article_user
-          WHERE article_id=:article_id
+          'UPDATE info SET
+          info_direccion=:info_direccion,
+          info_telefono=:info_telefono,
+          info_email=:info_email
+          WHERE info_id=:info_id
           LIMIT 1'
       );
-      $stmt->bindParam(':article_title', $this->article_title, PDO::PARAM_STR);
-      $stmt->bindParam(':article_description', $this->article_description, PDO::PARAM_STR);
-      $stmt->bindParam(':article_image', $this->article_image, PDO::PARAM_STR);
-      $stmt->bindParam(':article_user', $this->article_user, PDO::PARAM_INT);
-      $stmt->bindParam(':article_id', $this->article_id, PDO::PARAM_INT);
+      $stmt->bindParam(':info_direccion', $this->info_direccion, PDO::PARAM_STR);
+      $stmt->bindParam(':info_telefono', $this->info_telefono, PDO::PARAM_STR);
+      $stmt->bindParam(':info_email', $this->info_email, PDO::PARAM_STR);
+      $stmt->bindParam(':info_id', $this->info_id, PDO::PARAM_INT);
       $stmt->execute();
       # Affected Rows?
       return $stmt->rowCount();

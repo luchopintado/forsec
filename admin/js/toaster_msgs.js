@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-var TOASTER_TITLE = "SYTCO";
+var TOASTER_TITLE = "FORSEC";
 
 function msg_toaster(msg, type, pos) {
     pos = typeof pos !== 'undefined' ? pos : 'toast-bottom-right';

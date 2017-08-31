@@ -16,11 +16,12 @@
             <div class="panel-body">
                 <ul class="nav nav-sidebar">
                     <li <?php echo $menu=='usuarios'?'class="active"':'';?>><a href="administrativo.php?option=usuarios">Usuarios</a></li>
+                    <li <?php echo $menu=='infos'?'class="active"':'';?>><a href="administrativo.php?option=infos">Información</a></li>
                     <li <?php echo $menu=='slides'?'class="active"':'';?>><a href="administrativo.php?option=slides">Slides</a></li>
-                    <li <?php echo $menu=='articulos'?'class="active"':'';?>><a href="administrativo.php?option=articulos">Artículos</a></li>
+                    <li <?php echo $menu=='articulos'?'class="active"':'';?>><a href="administrativo.php?option=articulos">Nosotros</a></li>
                     <li <?php echo $menu=='servicios'?'class="active"':'';?>><a href="administrativo.php?option=servicios">Servicios</a></li>
                     <li <?php echo $menu=='clientes'?'class="active"':'';?>><a href="administrativo.php?option=clientes">Clientes</a></li>
-                    <li <?php echo $menu=='obras'?'class="active"':'';?>><a href="administrativo.php?option=obras">Obras</a></li>
+                    <li <?php echo $menu=='obras'?'class="active"':'';?>><a href="administrativo.php?option=obras">Trabajos Realizados</a></li>
                 </ul>
             </div>
         </div>

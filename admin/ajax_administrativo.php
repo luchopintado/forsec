@@ -67,6 +67,7 @@ switch($option){
         listar_clientes();
         break;
 
+
     case "registrar_servicio":
         registrar_servicio();
         break;
@@ -82,6 +83,7 @@ switch($option){
     case "listar_servicios":
         listar_servicios();
         break;
+
 
 
     case "registrar_obra":
@@ -116,6 +118,23 @@ switch($option){
         break;
     case "listar_users":
         listar_users();
+        break;
+
+
+    case "registrar_info":
+        registrar_info();
+        break;
+    case "editar_info":
+        editar_info();
+        break;
+    case "eliminar_info":
+        eliminar_info();
+        break;
+    case "actualizar_info":
+        actualizar_info();
+        break;
+    case "listar_infos":
+        listar_infos();
         break;
 
 
@@ -423,6 +442,8 @@ function listar_clientes(){
 function registrar_servicio(){
     $servicio = new Servicio;
     $servicio->storeFormValues($_POST);
+    $servicio->servicio_fechareg = date('Y-m-d H:i:s');
+    $servicio->servicio_user = $_SESSION[user][id];
     $idservicio = $servicio->insert();
     echo json_encode(array("servicio_id"=>$idservicio));
 }
@@ -434,6 +455,7 @@ function eliminar_servicio(){
 function editar_servicio(){
     $idservicio = $_POST["servicio_id"];
     $servicio = Servicio::getById($idservicio);
+    $servicio->servicio_user = $_SESSION[user][id];
     echo json_encode(array("servicio"=>$servicio));
 }
 function actualizar_servicio(){
@@ -445,7 +467,7 @@ function actualizar_servicio(){
 function listar_servicios(){
     $start = $_GET['iDisplayStart']*1;
     $limit = $_GET['iDisplayLength']*1;
-    $aColumns = array("servicio_id", "servicio_nombre", "servicio_descripcion", "servicio_fechareg", "servicio_user");
+    $aColumns = array("servicio_id", "servicio_nombre", "servicio_descripcion", "servicio_fechareg", "servicio_user", "servicio_image", "servicio_thumb");
     $whereParams = array();
     $orderParams = array();
     if ( isset( $_GET['iSortCol_0'] ) ){
@@ -481,7 +503,6 @@ function listar_servicios(){
         "aaData" => $servicios["servicios"]
     ));
 }
-
 
 /*************************************************************************************************************/
 /*************************************************************************************************************/
@@ -575,5 +596,72 @@ function listar_obras(){
         "iTotalRecords" => $obras["totalCount"]*1,
         "iTotalDisplayRecords" => $obras["totalCount"]*1,
         "aaData" => $obras["obras"]
+    ));
+}
+
+
+
+/*************************************************************************************************************/
+/*************************************************************************************************************/
+
+function registrar_info(){
+    $info = new Info;
+    $info->storeFormValues($_POST);
+    $idinfo = $info->insert();
+    echo json_encode(array("info_id"=>$idinfo));
+}
+function eliminar_info(){
+    $info = new Info;
+    $info->storeFormValues($_POST);
+    echo json_encode(array("success"=>$info->delete()));
+}
+function editar_info(){
+    $idinfo = $_POST["info_id"];
+    $info = Info::getById($idinfo);
+    echo json_encode(array("info"=>$info));
+}
+function actualizar_info(){
+    $idinfo = $_POST["info_id"];
+    $info = Info::getById($idinfo);
+    $info->storeFormValues($_POST);
+    echo json_encode(array("success"=>$info->update()));
+}
+function listar_infos(){
+    $start = $_GET['iDisplayStart']*1;
+    $limit = $_GET['iDisplayLength']*1;
+    $aColumns = array("info_id", "info_direccion", "info_telefono", "info_email");
+    $whereParams = array();
+    $orderParams = array();
+    if ( isset( $_GET['iSortCol_0'] ) ){
+        for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ ){
+            if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" ){
+                $orderParams[] = array(
+                    "field"=>$aColumns[ intval( $_GET['iSortCol_'.$i] ) ],
+                    "order"=> $_GET['sSortDir_'.$i]==='asc' ? 'asc' : 'desc'
+                );
+            }
+        }
+    }
+
+    if ( isset($_GET['sSearch']) && $_GET['sSearch'] != "" ){
+        for ( $i=0 ; $i<count($aColumns) ; $i++ ){
+            if ( isset($_GET['bSearchable_'.$i]) && $_GET['bSearchable_'.$i] == "true" ){
+                $whereParams[] = array(
+                    "field"=>$aColumns[$i],
+                    "operator"=>"LIKE",
+                    "value"=>$_GET['sSearch'],
+                    "conjunction"=>"OR"
+                );
+            }
+        }
+    }
+
+    $infos = Info::getByFields($whereParams, $orderParams, $start, $limit);
+
+    echo json_encode(array(
+        "sEcho" => intval($_GET['sEcho']),
+        "iTotalRecords" => $infos["totalCount"]*1,
+        "iTotalDisplayRecords" => $infos["totalCount"]*1,
+        "aaData" => $infos["infos"]
     ));
 }

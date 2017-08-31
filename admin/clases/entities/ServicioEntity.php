@@ -2,13 +2,13 @@
 
 class ServicioEntity extends EntityBase implements DBOCrud{
 
-  var $servicios_id='';
-  var $servicios_nombre='';
-  var $servicios_descripcion='';
-  var $servicios_fechareg='';
-  var $servicios_user='';
-  var $servicios_image='';
-  var $servicios_thumb='';
+  var $servicio_id='';
+  var $servicio_nombre='';
+  var $servicio_descripcion='';
+  var $servicio_fechareg='';
+  var $servicio_user='';
+  var $servicio_image='';
+  var $servicio_thumb='';
 
   public function __construct($options = array()) {
     parent::__construct($options);
@@ -16,21 +16,21 @@ class ServicioEntity extends EntityBase implements DBOCrud{
 
   public function storeFormValues(&$options) {
     $pattern = "/[^\.\,\-\_'\"\@\?\!\:\$ a-zA-Z0-9()áéíóúÁÉÍÓÚüÜ]/";
-    if (isset($options["servicios_id"])) {
-      if ($options["servicios_id"] == "") {
-        $options["servicios_id"] = null;
+    if (isset($options["servicio_id"])) {
+      if ($options["servicio_id"] == "") {
+        $options["servicio_id"] = null;
       }
     }
     //Add validation for other fields, specially STRINGS!
     $this->__construct($options);
   }
 
-  public static function getById($servicios_id) {
+  public static function getById($servicio_id) {
     try{
       global $pdo;
-      $sql = "SELECT * FROM servicios WHERE servicios_id=:servicios_id LIMIT 1";
+      $sql = "SELECT * FROM servicio WHERE servicio_id=:servicio_id LIMIT 1";
       $stmt = $pdo->prepare($sql);
-      $stmt->bindParam(':servicios_id', $servicios_id, PDO::PARAM_INT);
+      $stmt->bindParam(':servicio_id', $servicio_id, PDO::PARAM_INT);
       $stmt->execute();
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
       if($row){
@@ -70,7 +70,7 @@ class ServicioEntity extends EntityBase implements DBOCrud{
           $whereClause = ' WHERE ' . $cadWhere;
       }
 
-      $query = 'SELECT SQL_CALC_FOUND_ROWS * FROM servicios ' . $whereClause . $orderClause .' LIMIT :start, :limit';
+      $query = 'SELECT SQL_CALC_FOUND_ROWS * FROM servicio ' . $whereClause . $orderClause .' LIMIT :start, :limit';
       $stmt = $pdo->prepare($query);
       if(count($whereParams)>0){
         foreach($whereParams as $wp){
@@ -108,8 +108,8 @@ class ServicioEntity extends EntityBase implements DBOCrud{
   public function delete() {
     try {
       global $pdo;
-      $stmt = $pdo->prepare('DELETE FROM servicios WHERE servicios_id=:servicios_id LIMIT 1');
-      $stmt->bindParam(':servicios_id', $this->servicios_id, PDO::PARAM_INT);
+      $stmt = $pdo->prepare('DELETE FROM servicio WHERE servicio_id=:servicio_id LIMIT 1');
+      $stmt->bindParam(':servicio_id', $this->servicio_id, PDO::PARAM_INT);
       $stmt->execute();
       if($stmt->rowCount() === 1){
         return true;
@@ -125,29 +125,29 @@ class ServicioEntity extends EntityBase implements DBOCrud{
     try {
       global $pdo;
       $stmt = $pdo->prepare(
-          'INSERT INTO servicios(
-            servicios_nombre , 
-            servicios_descripcion , 
-            servicios_fechareg , 
-            servicios_user , 
-            servicios_image , 
-            servicios_thumb
+          'INSERT INTO servicio(
+            servicio_nombre , 
+            servicio_descripcion , 
+            servicio_fechareg , 
+            servicio_user , 
+            servicio_image , 
+            servicio_thumb
         )
         VALUES(
-            :servicios_nombre , 
-            :servicios_descripcion , 
-            :servicios_fechareg , 
-            :servicios_user , 
-            :servicios_image , 
-            :servicios_thumb
+            :servicio_nombre , 
+            :servicio_descripcion , 
+            :servicio_fechareg , 
+            :servicio_user , 
+            :servicio_image , 
+            :servicio_thumb
         )'
       );
-      $stmt->bindParam(':servicios_nombre', $this->servicios_nombre, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_descripcion', $this->servicios_descripcion, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_fechareg', $this->servicios_fechareg, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_user', $this->servicios_user, PDO::PARAM_INT);
-      $stmt->bindParam(':servicios_image', $this->servicios_image, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_thumb', $this->servicios_thumb, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_nombre', $this->servicio_nombre, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_descripcion', $this->servicio_descripcion, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_fechareg', $this->servicio_fechareg, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_user', $this->servicio_user, PDO::PARAM_INT);
+      $stmt->bindParam(':servicio_image', $this->servicio_image, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_thumb', $this->servicio_thumb, PDO::PARAM_STR);
       $stmt->execute();
 
       # Affected Rows?
@@ -165,23 +165,23 @@ class ServicioEntity extends EntityBase implements DBOCrud{
     try {
       global $pdo;
       $stmt = $pdo->prepare(
-          'UPDATE servicios SET
-          servicios_nombre=:servicios_nombre,
-          servicios_descripcion=:servicios_descripcion,
-          servicios_fechareg=:servicios_fechareg,
-          servicios_user=:servicios_user,
-          servicios_image=:servicios_image,
-          servicios_thumb=:servicios_thumb
-          WHERE servicios_id=:servicios_id
+          'UPDATE servicio SET
+          servicio_nombre=:servicio_nombre,
+          servicio_descripcion=:servicio_descripcion,
+          servicio_fechareg=:servicio_fechareg,
+          servicio_user=:servicio_user,
+          servicio_image=:servicio_image,
+          servicio_thumb=:servicio_thumb
+          WHERE servicio_id=:servicio_id
           LIMIT 1'
       );
-      $stmt->bindParam(':servicios_nombre', $this->servicios_nombre, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_descripcion', $this->servicios_descripcion, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_fechareg', $this->servicios_fechareg, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_user', $this->servicios_user, PDO::PARAM_INT);
-      $stmt->bindParam(':servicios_image', $this->servicios_image, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_thumb', $this->servicios_thumb, PDO::PARAM_STR);
-      $stmt->bindParam(':servicios_id', $this->servicios_id, PDO::PARAM_INT);
+      $stmt->bindParam(':servicio_nombre', $this->servicio_nombre, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_descripcion', $this->servicio_descripcion, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_fechareg', $this->servicio_fechareg, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_user', $this->servicio_user, PDO::PARAM_INT);
+      $stmt->bindParam(':servicio_image', $this->servicio_image, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_thumb', $this->servicio_thumb, PDO::PARAM_STR);
+      $stmt->bindParam(':servicio_id', $this->servicio_id, PDO::PARAM_INT);
       $stmt->execute();
       # Affected Rows?
       return $stmt->rowCount();
@@ -191,4 +191,3 @@ class ServicioEntity extends EntityBase implements DBOCrud{
   }
 
 }
-        

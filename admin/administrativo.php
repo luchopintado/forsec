@@ -37,6 +37,9 @@ switch ($option) {
     case 'obras':
         obras();
         break;
+    case 'infos':
+        infos();
+        break;
 
 
     default:
@@ -74,4 +77,9 @@ function obras(){
     $titulo = "Registrar Obras";
     $menu = "obras";
     require './mod/administrativo/obras.php';
+}
+function infos(){
+    $titulo = "Registrar Información";
+    $menu = "infos";
+    require './mod/administrativo/infos.php';
 }
