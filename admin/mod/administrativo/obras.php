@@ -108,7 +108,7 @@
                                         <input type="text" class="form-control input-sm" id="txt-obra-descripcion" name="obra_descripcion" >
                                     </div>
                                 </div>
-                              
+
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label" for="file-obra-imagen">Imagen:</label>
                                     <div class="col-sm-8">
@@ -164,7 +164,7 @@
                     "sAjaxSource": "ajax_administrativo.php?option=listar_obras",
                     "aoColumnDefs" :[
                         {
-                            "fnRender": function ( oObj ) {                                
+                            "fnRender": function ( oObj ) {
                                 var img = oObj.aData["obra_imagen"];
                                 if (img) {
                                     return '<img src="../'+ img +'" class="img-responsive"/>';
@@ -175,8 +175,8 @@
                             "aTargets": [6]
                         },
                         {
-                            "fnRender": function ( oObj ) {                                
-                                var layout = oObj.aData["obra_layout"] * 1 || 0;                                
+                            "fnRender": function ( oObj ) {
+                                var layout = oObj.aData["obra_layout"] * 1 || 0;
                                 return LAYOUTS[layout];
                             },
                             "aTargets": [5]
@@ -291,11 +291,31 @@
 
                 var $form = $("#form-registrar-obra");
                 $form.submit(function(evt){
+                    var $file_imagen = $(this).find('input:file');
+                    var formData = new FormData();
+                    var form = $(this).get(0);
+
+                    if(formData){
+                        var fileInput = $file_imagen.get(0);
+                        var file = fileInput.files[0];
+                        formData.append(fileInput.name, file);
+                    }
+
+
+                    for (i=0;i<form.elements.length;i++){
+                        formData.append(form.elements[i].name, form.elements[i].value);
+                    }
+
                     evt.preventDefault();
-                    $.post(
-                        'ajax_administrativo.php',
-                        $form.serialize(),
-                        function(data){
+
+                    jQuery.ajax({
+                        url: 'ajax_administrativo.php',
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        type: 'POST',
+                        success: function(data){
                             if($("#hdn-option").val() == "actualizar_obra"){
                                 if(data.success){
                                     $modal_nuevo_obra.modal("hide");
@@ -305,7 +325,8 @@
                                     msg_error("Error al actualizar registro");
                                 }
                             }else{
-                                if(data.obra_id){
+                                var ojbObra = $.parseJSON(data);
+                                if(ojbObra.obra_id){
                                     $modal_nuevo_obra.modal("hide");
                                     $dt_tabla_obra.fnStandingRedraw();
                                     $form.get(0).reset();
@@ -313,9 +334,9 @@
                                     msg_error("Error al registrar obra.");
                                 }
                             }
-                        },
-                        'json'
-                    );
+                        }
+                    });
+
                 });
 
                 /****************************************************/
