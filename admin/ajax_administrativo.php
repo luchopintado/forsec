@@ -486,10 +486,37 @@ function listar_servicios(){
 /*************************************************************************************************************/
 /*************************************************************************************************************/
 function registrar_obra(){
+        include_once './extras/class.upload.php';
+    $error_documento = "";
+    $dir_dest = '../img/';
+
+    if($_FILES["obra_imagen"]){
+        $uploadedFile = new Upload($_FILES['obra_imagen']);
+
+        if ($uploadedFile->uploaded) {
+            $uploadedFile->Process($dir_dest);
+
+            if(!$uploadedFile->processed){
+                $error_documento = $uploadedFile->error;
+            }else{
+                $ruta_documento = $uploadedFile->file_dst_name;
+            }
+        }else{
+            $error_documento = "Error al cargar archivo al servidor";
+        }
+    }
+
+    // echo json_encode(array("slide_id"=>0, "file_dst_path"=>$uploadedFile->file_dst_path ));return;
+
+    $ruta_documento = $dir_dest . $ruta_documento;
+
     $obra = new Obra;
     $obra->storeFormValues($_POST);
+    $obra->obra_imagen = substr($ruta_documento, 3);
+    $obra->obra_user = $_SESSION["user"]["id"];
+
     $idobra = $obra->insert();
-    echo json_encode(array("obra_id"=>$idobra));
+    echo json_encode(array("obra_id"=>$idobra, "error_documento"=>$error_documento));
 }
 function eliminar_obra(){
     $obra = new Obra;
