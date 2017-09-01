@@ -8,7 +8,7 @@
     <meta name="keywords" content="ingeniería, construccion, topografía, diseño,ejecución, proyectos, obras civiles, minería, agroindustria,receptores gps. drones, sistemas de computo,piura,peru,topografía digital, geodesia, cartografía, desarrollo, urbano, sociedad, conservación medio ambiente,mejoramiento,rehabilitación, mantenimiento,carreteras, trochas,carrózales, camino, vecinal, pavimentación, movimiento de tierras, infraestructura, casa,edificio, calidad,seguridad,responsabilidad social, estructura, pozo, maquinaria, ingeniero,arquitecto, albanilería,puentes,mecanica de suelos,estudios de transito"/>
     <meta name="robots" content="index,follow"/>
     <meta name="googlebot" content="index, follow" />
-    <meta name="organization" content="Forsec SAC" />    
+    <meta name="organization" content="Forsec SAC" />
     <meta name="locality" content="Piura, Peru" />
     <link rel="canonical" href="https://forsecsac.com" />
 
@@ -284,8 +284,8 @@
 	    				por correo, si lo desea, puede utilizar el siguiente formulario.
 	    			</p>
                     <br />
-	    			<span class="email"><img src="img/icon-white-mail.png"> rferia@forsecsac.com</span><br/><br/>
-	    			<span class="phone"><img src="img/icon-white-phone.png"/> 968059090 / RPM: *579092</span>
+	    			<span class="email"><img src="img/icon-white-mail.png"> <span id="info-email"><!--rferia@forsecsac.com--></span></span><br/><br/>
+	    			<span class="phone"><img src="img/icon-white-phone.png"/> <span id="info-telefono"><!--968059090 / RPM: *579092--></span></span>
 	    		</div>
     		</div>
 
@@ -332,11 +332,12 @@
     		<div class="row">
 	            <div class="col-md-4 col-xs-8">
 	                <h4>INFORMES</h4>
-	                <span><span class="icon address"></span> Jr. La Arena 552</span><br/>
-	                <span>Urb. Santa Ana - Piura</span>
+                    <span class="icon address"></span><span id="info-direccion"><!--Jr. La Arena 552 Urb. Santa Ana - Piura--></span><br/>
 	            </div>
 	            <div class="col-md-4 col-xs-2">
-	                <a href="" class="text-center block"><img src="img/icon-fb.png" alt="Búscanos en facebook"></a>
+                    <a title="Búscanos en facebook" href="https://www.facebook.com/forsecsac/" class="text-center block"><img width="42" height="42"  src="img/icon-fb.png" alt="Búscanos en facebook"></a>
+                     &nbsp;&nbsp;&nbsp;
+	                <a title="Descarga nuestro Brochure" href="./brochure-forsec2017.pdf" class="text-center block"><img width="42" height="42" src="img/download-pdf.png" alt="Descarga nuestro Brochure"></a>
 	            </div>
 	            <div class="col-md-4 col-xs-2">
 	                <a href="#" id="link-gotop" data-target="main" class="pull-right"><img src="img/go-top.png"></a>
@@ -367,7 +368,7 @@
                 }, 1000);
             });
 
-            
+
         });
     </script>
 
@@ -407,10 +408,10 @@
                     $.each(data.aaData, function (i, e){
                             // ps[i].html(e.article_description);
                             tpl += '<li>';
-                            tpl += '    <a href="'+ e.services_image +'" data-lightbox="example-set" data-title="'+ e.servicios_descripcion +'">';
-                            tpl += '        <img src="'+ e.servicios_thumb +'" alt="">';
+                            tpl += '    <a href="'+ e.servicio_image +'" data-lightbox="example-set" data-title="'+ e.servicio_descripcion +'">';
+                            tpl += '        <img src="'+ e.servicio_thumb +'" alt="">';
                             tpl += '    </a>';
-                            tpl += '    <p>'+ e.servicios_descripcion +'</p>';
+                            tpl += '    <p>'+ e.servicio_descripcion +'</p>';
                             tpl += '</li>';
                     });
                     $("#ul-servicios").html(tpl);
@@ -426,10 +427,10 @@
                 if (data.aaData) {
                     var tpl = '';
                     $.each(data.aaData, function (i, e){
-                        
+
                         tpl += '<figure class="client delay0_2">';
                         tpl += '    <img src="'+ e.cliente_image +'" alt="'+ e.cliente_razon +'">';
-                        tpl += '    <figcaption>'+ e.client_razon +'</figcaption>';
+                        tpl += '    <figcaption>'+ e.cliente_razon +'</figcaption>';
                         tpl += '</figure>';
                     });
 
@@ -452,7 +453,16 @@
                 }
             }, 'json');
 
-           
+            $.post('admin/ajax_administrativo.php?option=listar_infos&iDisplayStart=0&iDisplayLength=1', {}, function(data){
+                if (data.aaData) {
+                    var info = data.aaData[0];
+                    $("#info-email").html(info.info_email);
+                    $("#info-telefono").html(info.info_telefono);
+                    $("#info-direccion").html(info.info_direccion);
+                }
+            }, 'json');
+
+
 
         });
     </script>
